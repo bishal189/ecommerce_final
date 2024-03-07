@@ -146,7 +146,7 @@
 }
 
 	var amount = "{{ grand_total }}"
-	var url = "{% url 'payments' %}"
+	var url = "{% url 'payements' %}"
 	var csrftoken = getCookie('csrftoken');
 	var orderID = "{{order.order_number}}"
 	var payment_method = 'PayPal'

@@ -429,6 +429,7 @@ def checkout(request,total=0,quantity=0,cart_items=None):
 def payement(request):
     
     body=json.loads(request.body)
+    print(body,'************8')
     
     order=Order.objects.get(user=request.user,is_ordered=False,order_number=body['orderID'])
  
@@ -437,7 +438,7 @@ def payement(request):
     payment=Payment.objects.create(
         user=request.user,
         payment_id=body['transID'],
-        payment_method=body['payement_method'],
+        payment_method=body['payment_method'],
         amount_paid=order.total,
         status=body['status'],
 
@@ -502,16 +503,16 @@ def payement(request):
 
 # send order recived email to customer
 # now sending the email to the user after the transactions sucessful
-    # mail_subject='Thank you for your order!'
-    # message=render_to_string('orders/order_recieved_email.html', {
-    #     'user':request.user,
-    #     'order':order
-    # })
+    mail_subject='Thank you for your order!'
+    message=render_to_string('orders/order_recieved_email.html', {
+        'user':request.user,
+        'order':order
+    })
 
 
-    # to_email=request.user.email
-    # send_email=EmailMessage(mail_subject,message,to=[to_email])
-    # send_email.send()
+    to_email=request.user.email
+    send_email=EmailMessage(mail_subject,message,to=[to_email])
+    send_email.send()
 
 
 
@@ -535,48 +536,10 @@ def payement(request):
     return JsonResponse(data)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    return render(request,'orders/payements.html')
-
-
-
-
-
-
-
-
-
-
-
 def order_complete(request):
     order_number=request.GET.get('order_number')
     transID=request.GET.get('payment_id')
+    
    
     try:
         order=Order.objects.get(order_number=order_number,is_ordered=True)
@@ -588,6 +551,8 @@ def order_complete(request):
         for i in ordered_products:
             subtotal+=i.product_price*i.quantity;
 
+        total=subtotal+36    
+
         context={
             'order':order,
             'ordered_products':ordered_products,
@@ -595,8 +560,9 @@ def order_complete(request):
             'transID':transID,
             'payment':payement,
             'subtotal':subtotal,
-          
+            'order_total':total
         }
+        print(context)
         return render(request,'orders/order_complete.html',context)
 
 
