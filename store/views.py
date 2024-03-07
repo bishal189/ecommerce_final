@@ -8,7 +8,6 @@ from .models import ReviewRating
 from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
-from ecommerce.settings  import SPACY_NLP
 # Create your views here.
 
 def _cart_id(request):

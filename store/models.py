@@ -16,8 +16,6 @@ class Product(models.Model):
     created_date=models.DateTimeField(auto_now_add=True)
     modified_at=models.DateTimeField(auto_now=True)
 
-
-
     def get_url(self):
         return reverse('product_details',args=[self.category.slug, self.slug])
     
@@ -48,13 +46,8 @@ class Variation(models.Model):
 
 
 
-
-
-
     def __str__(self):
         return str(self.variation_value)
-
-
 
 
 class ReviewRating(models.Model):

@@ -56,7 +56,6 @@ def register(request):
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
             messages.success(request, f'Thank you for registering with us. We have sent you a verification email to your email address {to_email}. Please verify it.')
-            print("upto redirect")
             return redirect('/account/login/')
         else:
             messages.error(request, f'Email  is already registered')
