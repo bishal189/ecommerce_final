@@ -8,9 +8,9 @@ from .models import ReviewRating
 from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
-from ecommerce.settings  import SPACY_NLP
+# from ecommerce.settings import SPACY_NLP
+import spacy
 # Create your views here.
-
 def _cart_id(request):
     cart=request.session.session_key
     if not cart:
@@ -87,6 +87,11 @@ def product_details(request,category_slug,product_slug):
 
 
 
+'''
+this is for semantic search
+
+# Load spaCy's English language model
+SPACY_NLP = spacy.load("en_core_web_lg")
 
 def semantic_search(query):
     # Preprocess query using spaCy
@@ -96,12 +101,17 @@ def semantic_search(query):
     products = Product.objects.all()
     relevant_products = []
     for product in products:
-        product_doc = SPACY_NLP(product.description)
-        similarity_score = query_doc.similarity(product_doc)
-        if similarity_score > 0.5:  # Adjust threshold as needed
+        # Preprocess product name and description using spaCy
+        product_name_doc = SPACY_NLP(product.product_name)
+        product_description_doc = SPACY_NLP(product.description)
+        
+        # Calculate semantic similarity for entire product name and description combined
+        combined_product_doc = SPACY_NLP(product.product_name + " " + product.description)
+        combined_similarity_score = query_doc.similarity(combined_product_doc)
+        
+        # Adjust threshold as needed
+        if combined_similarity_score > 0.7:
             relevant_products.append(product)
-
-    print(relevant_products)        
     
     return relevant_products
 
@@ -142,8 +152,25 @@ def search(request):
 
 #     return render(request, 'store/store.html', context)
 
+# def search(request):
+#     if 'keyword'  in request.GET:
+#         keyword=request.GET['keyword']
+#         if keyword:
+#             products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+#             count=products.count()
+
+#         context={
+#             'all_products':products,
+#             'count':count
+#         }    
+
+   
 
 
+
+
+#     return render(request,'store/store.html',context)
+'''
 def submit_review(request,product_id):
     url=request.META.get('HTTP_REFERER')
     if request.method=='POST':
