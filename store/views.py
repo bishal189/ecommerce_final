@@ -8,6 +8,7 @@ from .models import ReviewRating
 from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
+from ecommerce.settings  import SPACY_NLP
 # Create your views here.
 
 def _cart_id(request):
@@ -87,27 +88,59 @@ def product_details(request,category_slug,product_slug):
 
 
 
+def semantic_search(query):
+    # Preprocess query using spaCy
+    query_doc = SPACY_NLP(query)
+    
+    # Search products using semantic similarity
+    products = Product.objects.all()
+    relevant_products = []
+    for product in products:
+        product_doc = SPACY_NLP(product.description)
+        similarity_score = query_doc.similarity(product_doc)
+        if similarity_score > 0.5:  # Adjust threshold as needed
+            relevant_products.append(product)
+
+    print(relevant_products)        
+    
+    return relevant_products
+
 
 def search(request):
-    if 'keyword'  in request.GET:
-        keyword=request.GET['keyword']
+
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
         if keyword:
-            products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
-            count=products.count()
+            # Perform semantic search
+            relevant_products = semantic_search(keyword)
+            count = len(relevant_products)
+            context = {
+                'all_products': relevant_products,
+                'count': count,
+                'search_query': keyword
+            }
+    return render(request, 'store/store.html', context)
 
-        context={
-            'all_products':products,
-            'count':count
-        }    
+# def search(request):
+#     if 'keyword' in request.GET:
+#         keyword = request.GET['keyword']
+#         if keyword:
+#             # Perform semantic search
+#             relevant_products = semantic_search(keyword)
+#             count = len(relevant_products)
+#         else:
+#             relevant_products = []
+#             count = 0
+#     else:
+#         relevant_products = Product.objects.all()
+#         count = relevant_products.count()
 
-   
+#     context = {
+#         'all_products': relevant_products,
+#         'count': count
+#     }
 
-
-
-
-    return render(request,'store/store.html',context)
-
-
+#     return render(request, 'store/store.html', context)
 
 
 

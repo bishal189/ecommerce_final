@@ -40,7 +40,7 @@ def register(request):
             # Create a user profile
             profile = UserProfile()
             profile.user_id = user.id
-            profile.profile_picture = 'userprofile/EDV_lottery_photo.jpg'
+            profile.profile_picture = 'userprofile/profilepic.webp'
             profile.save()
 
             # USER ACTIVATION
