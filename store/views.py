@@ -31,6 +31,7 @@ def store(request,category_slug=None):
         context={
         'all_products':paged_products,
         'category':True,
+        'category_id':categories.id,
         'count':count,
 
     }

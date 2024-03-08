@@ -136,14 +136,50 @@
 					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} style="display:none;">Subscribed</button>
 					{% endif %}
 					<script>
-					function subscribeToggler(value){
+					async function subscribeToggler(value){
 					if (value){
 					document.getElementById('subscribed').style.display="block"
 					document.getElementById('subscribe').style.display="none"
+					var url = "{% url 'subscribe' category_id=category_id %}";
+
+					var csrftoken = "{{ csrf_token }}";
+
+					var fetchOptions = {
+					method: 'GET',  // or 'POST' if needed
+					headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+					},
+					};
+					const response=await fetch(url,fetchOptions)
+					const response_data=await response.json()
+					if (response.ok){
+					alert(response_data.message)
+					}else{
+					alert(response_data.error)
+					}
+
 					}else{
 					document.getElementById('subscribed').style.display="none"
 					document.getElementById('subscribe').style.display="block"
+					var url = "{% url 'unsubscribe' subscribe_id=category_id %}";
 
+					var csrftoken = "{{ csrf_token }}";
+
+					var fetchOptions = {
+					method: 'GET',  // or 'POST' if needed
+					headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+					},
+					};
+					const response=await fetch(url,fetchOptions)
+					const response_data=await response.json()
+					if (response.ok){
+					alert(response_data.message)
+					}else{
+					alert(response_data.error)
+					}
 					}
 					}
 					</script>
