@@ -135,7 +135,7 @@
 
 
 
-					{% if request.user not in subscribers %}
+					{% if not subscribers or request.user not in subscribers  %}
 					<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)}>Subscribe</button>
 					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} style="display:none;" >Subscribed</button>
 					{% else %}

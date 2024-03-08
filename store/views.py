@@ -28,15 +28,28 @@ def store(request,category_slug=None):
         page=request.GET.get('page')
         paged_products=paginator.get_page(page)
         count=all_product.count()
-        subscribers=SubscribeModel.objects.get(category=categories)
-        context={
+        subscribers=SubscribeModel.objects.filter(category=categories)
+        if (len(subscribers)==0):
+            print("not subscriers")
+            context={
         'all_products':paged_products,
         'category':True,
         'category_id':categories.id,
         'count':count,
-        'subscribers':subscribers.subscribers.all(),
+        'subscribers':-False
 
     }
+        else:
+            print(subscribers[0].subscribers.all())
+            context={
+        'all_products':paged_products,
+        'category':True,
+        'category_id':categories.id,
+        'count':count,
+        'subscribers':subscribers[0].subscribers.all(),
+
+    }
+
 
     else:    
 
