@@ -132,8 +132,16 @@
 
 					</div>
 					{% if category %}
+
+
+
+					{% if request.user not in subscribers %}
 					<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)}>Subscribe</button>
-					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} style="display:none;">Subscribed</button>
+					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} style="display:none;" >Subscribed</button>
+					{% else %}
+					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} >Subscribed</button>
+						<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)} style="display:none;">Subscribe</button>
+					{% endif %}
 					{% endif %}
 					<script>
 					async function subscribeToggler(value){

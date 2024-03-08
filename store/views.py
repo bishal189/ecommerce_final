@@ -8,6 +8,7 @@ from .models import ReviewRating
 from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
+from subscribe.models import SubscribeModel
 # Create your views here.
 
 def _cart_id(request):
@@ -26,13 +27,14 @@ def store(request,category_slug=None):
         paginator=Paginator(all_product,1)
         page=request.GET.get('page')
         paged_products=paginator.get_page(page)
-
         count=all_product.count()
+        subscribers=SubscribeModel.objects.get(category=categories)
         context={
         'all_products':paged_products,
         'category':True,
         'category_id':categories.id,
         'count':count,
+        'subscribers':subscribers.subscribers.all(),
 
     }
 
