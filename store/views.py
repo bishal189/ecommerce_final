@@ -151,26 +151,27 @@ def search(request):
 #     }
 
 #     return render(request, 'store/store.html', context)
+'''
 
-# def search(request):
-#     if 'keyword'  in request.GET:
-#         keyword=request.GET['keyword']
-#         if keyword:
-#             products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
-#             count=products.count()
+def search(request):
+    if 'keyword'  in request.GET:
+        keyword=request.GET['keyword']
+        if keyword:
+            products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+            count=products.count()
 
-#         context={
-#             'all_products':products,
-#             'count':count
-#         }    
+        context={
+            'all_products':products,
+            'count':count
+        }    
 
    
 
 
 
 
-#     return render(request,'store/store.html',context)
-'''
+    return render(request,'store/store.html',context)
+
 def submit_review(request,product_id):
     url=request.META.get('HTTP_REFERER')
     if request.method=='POST':
