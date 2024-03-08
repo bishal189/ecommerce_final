@@ -162,7 +162,7 @@
 					}else{
 					document.getElementById('subscribed').style.display="none"
 					document.getElementById('subscribe').style.display="block"
-					var url = "{% url 'unsubscribe' subscribe_id=category_id %}";
+					var url = "{% url 'unsubscribe' category_id=category_id %}";
 
 					var csrftoken = "{{ csrf_token }}";
 
