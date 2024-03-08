@@ -126,11 +126,27 @@
 			</aside> <!-- col.// -->
 			<main class="col-md-9">
 
-				<header class="border-bottom mb-4 pb-3">
+				<header class="border-bottom mb-4 pb-3 d-flex justify-content-between">
 					<div class="form-inline">
 						<span class="mr-md-auto"> <b>{{count}} </b> items found</span>
 
 					</div>
+					{% if category %}
+					<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)}>Subscribe</button>
+					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} style="display:none;">Subscribed</button>
+					{% endif %}
+					<script>
+					function subscribeToggler(value){
+					if (value){
+					document.getElementById('subscribed').style.display="block"
+					document.getElementById('subscribe').style.display="none"
+					}else{
+					document.getElementById('subscribed').style.display="none"
+					document.getElementById('subscribe').style.display="block"
+
+					}
+					}
+					</script>
 				</header><!-- sect-heading -->
 
 				<div class="row">

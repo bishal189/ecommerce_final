@@ -20,7 +20,6 @@ def _cart_id(request):
 
 def store(request,category_slug=None):
 
-
     if category_slug!=None:
         categories=get_object_or_404(Category,slug=category_slug)
         all_product=Product.objects.all().filter(is_available=True,category=categories)
@@ -29,6 +28,12 @@ def store(request,category_slug=None):
         paged_products=paginator.get_page(page)
 
         count=all_product.count()
+        context={
+        'all_products':paged_products,
+        'category':True,
+        'count':count,
+
+    }
 
     else:    
 
@@ -38,12 +43,11 @@ def store(request,category_slug=None):
        paged_products=paginator.get_page(page)
 
        count=all_product.count()
-    context={
+       context={
         'all_products':paged_products,
         
         'count':count,
-        
-    }
+        }
     return render(request,'store/store.html',context)
 
 def product_details(request,category_slug,product_slug):
