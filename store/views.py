@@ -179,4 +179,5 @@ def submit_review(request,product_id):
                 messages.success(request,'Thanks you! your review has been submitted')
                 return redirect(url)
 
-             
+
+
