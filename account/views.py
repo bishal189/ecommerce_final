@@ -23,6 +23,7 @@ import requests
 
 def register(request):
     if request.method == 'POST':
+        user_type=request.POST.get('user_type')
         form = RegistrationForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
@@ -32,7 +33,7 @@ def register(request):
             password = form.cleaned_data['password']
             username = email.split("@")[0]
             #check if there is already an email associated
-            user = Account.objects.create_account(user_type="seller",first_name=first_name, last_name=last_name, email=email, username=username, password=password)
+            user = Account.objects.create_account(user_type=user_type,first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
         
