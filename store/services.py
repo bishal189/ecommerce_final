@@ -64,4 +64,4 @@ results = client.search(collection_name='product_collection',
                         query_vector=vectorized_text, limit=5)
 
 
-print(results)
+# print(results)
