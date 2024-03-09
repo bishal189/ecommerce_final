@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404,redirect,HttpResponse
+from django.shortcuts import render,get_object_or_404,redirect
 from store.models import Product
 from Category.models import Category
 from cart.models import Cartitem
@@ -8,8 +8,52 @@ from .models import ReviewRating
 from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
-# from ecommerce.settings import SPACY_NLP
-import spacy
+from .models import Product
+import pandas as pd
+from qdrant_client import QdrantClient
+from qdrant_client.models import models
+from sentence_transformers import SentenceTransformer
+from .utils import load_data,prepare_data
+
+
+# for sematic search 
+
+
+client = QdrantClient(":memory:")
+client.recreate_collection(collection_name='product_collection',
+                           vectors_config=models.VectorParams(
+                               size=384, distance=models.Distance.COSINE
+                           ))
+
+
+# vectorized our data create word embedaded
+
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+df = load_data('/home/bishalm/Desktop/ecommerce/data1.csv')
+docx, payload = prepare_data(df)
+
+
+
+
+# vectors=load_vectors('vectorized_courses.pickle')
+# print(docx)
+vectors = model.encode(docx, show_progress_bar=True)
+
+
+client.upload_collection(
+    collection_name='product_collection',
+    vectors=vectors,
+    payload=payload,
+    ids=None,
+    batch_size=256
+
+)
+
+
+
+
+
 # Create your views here.
 def _cart_id(request):
     cart=request.session.session_key
@@ -41,7 +85,6 @@ def store(request,category_slug=None):
        count=all_product.count()
     context={
         'all_products':paged_products,
-        
         'count':count,
         
     }
@@ -87,90 +130,50 @@ def product_details(request,category_slug,product_slug):
 
 
 
-'''
-this is for semantic search
 
-# Load spaCy's English language model
-SPACY_NLP = spacy.load("en_core_web_lg")
 
-def semantic_search(query):
-    # Preprocess query using spaCy
-    query_doc = SPACY_NLP(query)
+
     
-    # Search products using semantic similarity
-    products = Product.objects.all()
-    relevant_products = []
-    for product in products:
-        # Preprocess product name and description using spaCy
-        product_name_doc = SPACY_NLP(product.product_name)
-        product_description_doc = SPACY_NLP(product.description)
-        
-        # Calculate semantic similarity for entire product name and description combined
-        combined_product_doc = SPACY_NLP(product.product_name + " " + product.description)
-        combined_similarity_score = query_doc.similarity(combined_product_doc)
-        
-        # Adjust threshold as needed
-        if combined_similarity_score > 0.7:
-            relevant_products.append(product)
-    
-    return relevant_products
-
-
-def search(request):
-
-    if 'keyword' in request.GET:
-        keyword = request.GET['keyword']
-        if keyword:
-            # Perform semantic search
-            relevant_products = semantic_search(keyword)
-            count = len(relevant_products)
-            context = {
-                'all_products': relevant_products,
-                'count': count,
-                'search_query': keyword
-            }
-    return render(request, 'store/store.html', context)
-
-# def search(request):
-#     if 'keyword' in request.GET:
-#         keyword = request.GET['keyword']
-#         if keyword:
-#             # Perform semantic search
-#             relevant_products = semantic_search(keyword)
-#             count = len(relevant_products)
-#         else:
-#             relevant_products = []
-#             count = 0
-#     else:
-#         relevant_products = Product.objects.all()
-#         count = relevant_products.count()
-
-#     context = {
-#         'all_products': relevant_products,
-#         'count': count
-#     }
-
-#     return render(request, 'store/store.html', context)
-'''
-
 def search(request):
     if 'keyword'  in request.GET:
         keyword=request.GET['keyword']
         if keyword:
-            products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
-            count=products.count()
-
+            # products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+            # count=products.count()
+            # vectorized the search term
+            vectorized_text = model.encode(keyword).tolist()
+            products= client.search(collection_name='product_collection',
+                        query_vector=vectorized_text, limit=5)
+            # count=products.count()            
+            #search the vectorDB and and get recomandation
+            result=[]
+            for product in products:
+                if product.score>0.7:
+                    data=Product.objects.get(id=product.payload['id'])
+                    result.append(data)
         context={
-            'all_products':products,
-            'count':count
+            'all_products':result,
+            'count':len(result)
         }    
 
-   
-
-
-
-
     return render(request,'store/store.html',context)
+    
+# def search(request):
+#     if 'keyword'  in request.GET:
+#         keyword=request.GET['keyword']
+#         if keyword:
+#             products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+#             count=products.count()
+
+#         context={
+#             'all_products':products,
+#             'count':count
+#         }    
+
+#     return render(request,'store/store.html',context)
+
+
+
 
 def submit_review(request,product_id):
     url=request.META.get('HTTP_REFERER')
