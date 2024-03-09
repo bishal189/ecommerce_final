@@ -32,7 +32,7 @@ def register(request):
             password = form.cleaned_data['password']
             username = email.split("@")[0]
             #check if there is already an email associated
-            user = Account.objects.create_user(first_name=first_name, last_name=last_name, email=email, username=username, password=password)
+            user = Account.objects.create_account(user_type="seller",first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
         
