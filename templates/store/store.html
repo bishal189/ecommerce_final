@@ -142,7 +142,6 @@
 					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} >Subscribed</button>
 						<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)} style="display:none;">Subscribe</button>
 					{% endif %}
-					{% endif %}
 					<script>
 					async function subscribeToggler(value){
 					if (value){
@@ -190,7 +189,9 @@
 					}
 					}
 					}
-					</script>
+					</script>	
+									{% endif %}
+
 				</header><!-- sect-heading -->
 
 				<div class="row">
