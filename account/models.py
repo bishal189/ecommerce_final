@@ -3,29 +3,32 @@ from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 
 # Create your models here.
 
-class myaccountmanager(BaseUserManager):
-    def create_user(self,first_name,last_name,username,email,password=None):
+from django.contrib.auth.models import BaseUserManager
+
+class MyAccountManager(BaseUserManager):
+    def create_user( first_name, last_name, username, email, password=None,user_type="buyer"):
         if not email:
-            raise ValueError('user must have an email address')
+            raise ValueError('User must have an email address')
 
         if not username:
-            raise ValueError('user must have an username')
+            raise ValueError('User must have a username')
+        print(user_type)
 
-        
-        user=self.model(
-            email=self.normalize_email(email),
+        user = Account(
+            email=email,
             username=username,
             first_name=first_name,
             last_name=last_name,
         )
-
+        if (user_type=="seller"):
+            user.is_seller=True
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
+        print(user)
         return user
 
-
-    def create_superuser(self,first_name,last_name,email,username,password):
-        user=self.create_user(
+    def create_superuser(self, first_name, last_name, email, username, password):
+        user = self.create_user(
             email=self.normalize_email(email),
             username=username,
             password=password,
@@ -33,18 +36,23 @@ class myaccountmanager(BaseUserManager):
             last_name=last_name,
         )
 
-        user.is_admin=True
-        user.is_active=True
-        user.is_staff=True
-        user.is_superadmin=True
+        user.is_admin = True
+        user.is_active = True
+        user.is_staff = True
+        user.is_superadmin = True
         user.save(using=self._db)
         return user
 
-
-
-
-
-
+    @classmethod
+    def create_account(cls, user_type='buyer', **kwargs):
+        if user_type == 'buyer':
+            return cls.create_user(**kwargs)
+        if user_type=="seller":
+            return cls.create_user(**kwargs,user_type="seller")
+        elif user_type == 'superuser':
+            return cls.create_superuser(**kwargs, user_type='superuser')
+        else:
+            raise ValueError("Invalid user type")
 
 class Account(AbstractBaseUser):
     first_name= models.CharField(max_length=50)
@@ -52,14 +60,13 @@ class Account(AbstractBaseUser):
     username=models.CharField(max_length=50,unique=True)
     email=models.EmailField(max_length=100,unique=True)
     phone_number=models.CharField(max_length=50)
-   
-
 
 
     #required filed mendotory 
 
     date_joined=models.DateTimeField(auto_now_add=True)
     last_login=models.DateTimeField(auto_now_add=True)
+    is_seller=models.BooleanField(default=False)
     is_admin=models.BooleanField(default=False)
     is_staff=models.BooleanField(default=False)
     is_active=models.BooleanField(default=False)
@@ -69,7 +76,7 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username','first_name','last_name']
 
-    objects=myaccountmanager()
+    objects=MyAccountManager()
 
     def __str__(self):
         return self.email

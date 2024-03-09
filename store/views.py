@@ -8,6 +8,9 @@ from .models import ReviewRating
 from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
+from django.http import JsonResponse
+from subscribe.models import SubscribeModel
+# Create your views here.
 from .models import Product
 import pandas as pd
 from qdrant_client import QdrantClient
@@ -65,15 +68,35 @@ def _cart_id(request):
 
 def store(request,category_slug=None):
 
-
     if category_slug!=None:
         categories=get_object_or_404(Category,slug=category_slug)
         all_product=Product.objects.all().filter(is_available=True,category=categories)
         paginator=Paginator(all_product,1)
         page=request.GET.get('page')
         paged_products=paginator.get_page(page)
-
         count=all_product.count()
+        subscribers=SubscribeModel.objects.filter(category=categories)
+        if (len(subscribers)==0):
+            print("not subscriers")
+            context={
+        'all_products':paged_products,
+        'category':True,
+        'category_id':categories.id,
+        'count':count,
+        'subscribers':-False
+
+    }
+        else:
+            print(subscribers[0].subscribers.all())
+            context={
+        'all_products':paged_products,
+        'category':True,
+        'category_id':categories.id,
+        'count':count,
+        'subscribers':subscribers[0].subscribers.all(),
+
+    }
+
 
     else:    
 
@@ -83,11 +106,10 @@ def store(request,category_slug=None):
        paged_products=paginator.get_page(page)
 
        count=all_product.count()
-    context={
+       context={
         'all_products':paged_products,
         'count':count,
-        
-    }
+        }
     return render(request,'store/store.html',context)
 
 def product_details(request,category_slug,product_slug):
@@ -207,4 +229,47 @@ def submit_review(request,product_id):
                 messages.success(request,'Thanks you! your review has been submitted')
                 return redirect(url)
 
-             
+
+
+def add_product(request):
+    try:
+
+        categories=Category.objects.all().order_by('id')
+        if request.method=="POST":
+            data=request.POST
+            product_name=data.get('product_name')
+            product_description=data.get('product_description')
+            stock_count=data.get('stock_count')
+            item_price=data.get('item_price')
+            product_image=request.FILES.get('product_image')
+            category_id=data.get('category')
+            product_exists=Product.objects.filter(product_name=product_name).exists()
+            if product_exists:
+                context={
+                    'category':categories,
+                    'error':"Product already exists"
+                        }
+            else:
+                category=Category.objects.get(id=category_id)
+                Product.objects.create(product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
+                context= {
+                    'category':categories,
+                    'message':"Item successfully added"
+                    }
+            return render(request,'accounts/add_products.html',context)
+
+        elif request.method=="GET":
+            context={
+                'category':categories
+                }
+            return render(request,'accounts/add_products.html',context)
+        else:
+            return JsonResponse({'error':"unsupported method"},status=400)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        context= {
+                    'category':categories,
+                    'error':f"Some unexpected error occured {error}"
+                    }
+        return render(request,'accounts/add_products.html',context)

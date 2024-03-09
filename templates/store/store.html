@@ -126,11 +126,71 @@
 			</aside> <!-- col.// -->
 			<main class="col-md-9">
 
-				<header class="border-bottom mb-4 pb-3">
+				<header class="border-bottom mb-4 pb-3 d-flex justify-content-between">
 					<div class="form-inline">
 						<span class="mr-md-auto"> <b>{{count}} </b> items found</span>
 
 					</div>
+					{% if category %}
+
+
+
+					{% if not subscribers or request.user not in subscribers  %}
+					<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)}>Subscribe</button>
+					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} style="display:none;" >Subscribed</button>
+					{% else %}
+					<button id="subscribed" class="btn btn-outline-danger" onclick={subscribeToggler(false)} >Subscribed</button>
+						<button id="subscribe" class="btn btn-primary" onclick={subscribeToggler(true)} style="display:none;">Subscribe</button>
+					{% endif %}
+					{% endif %}
+					<script>
+					async function subscribeToggler(value){
+					if (value){
+					document.getElementById('subscribed').style.display="block"
+					document.getElementById('subscribe').style.display="none"
+					var url = "{% url 'subscribe' category_id=category_id %}";
+
+					var csrftoken = "{{ csrf_token }}";
+
+					var fetchOptions = {
+					method: 'GET',  // or 'POST' if needed
+					headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+					},
+					};
+					const response=await fetch(url,fetchOptions)
+					const response_data=await response.json()
+					if (response.ok){
+					alert(response_data.message)
+					}else{
+					alert(response_data.error)
+					}
+
+					}else{
+					document.getElementById('subscribed').style.display="none"
+					document.getElementById('subscribe').style.display="block"
+					var url = "{% url 'unsubscribe' category_id=category_id %}";
+
+					var csrftoken = "{{ csrf_token }}";
+
+					var fetchOptions = {
+					method: 'GET',  // or 'POST' if needed
+					headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+					},
+					};
+					const response=await fetch(url,fetchOptions)
+					const response_data=await response.json()
+					if (response.ok){
+					alert(response_data.message)
+					}else{
+					alert(response_data.error)
+					}
+					}
+					}
+					</script>
 				</header><!-- sect-heading -->
 
 				<div class="row">
