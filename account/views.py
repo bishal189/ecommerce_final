@@ -23,6 +23,7 @@ import requests
 
 def register(request):
     if request.method == 'POST':
+        user_type=request.POST.get('user_type')
         form = RegistrationForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
@@ -32,7 +33,7 @@ def register(request):
             password = form.cleaned_data['password']
             username = email.split("@")[0]
             #check if there is already an email associated
-            user = Account.objects.create_user(first_name=first_name, last_name=last_name, email=email, username=username, password=password)
+            user = Account.objects.create_account(user_type=user_type,first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
         
@@ -56,7 +57,6 @@ def register(request):
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
             messages.success(request, f'Thank you for registering with us. We have sent you a verification email to your email address {to_email}. Please verify it.')
-            print("upto redirect")
             return redirect('/account/login/')
         else:
             messages.error(request, f'Email  is already registered')
@@ -244,7 +244,7 @@ def my_orders(request):
         'orders': orders,
         
     }
-    
+
     return render(request, 'accounts/my_orders.html', context)
 
 
