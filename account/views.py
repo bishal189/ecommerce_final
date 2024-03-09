@@ -237,7 +237,6 @@ def resetPassword(request):
 
 @login_required(login_url='login')
 def my_orders(request):
-    print(request.user)
     user=request.user
     orders = Order.objects.filter(user=user,is_ordered=True).order_by('-created_at')
    
@@ -245,6 +244,7 @@ def my_orders(request):
         'orders': orders,
         
     }
+
     return render(request, 'accounts/my_orders.html', context)
 
 

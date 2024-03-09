@@ -1,0 +1,9 @@
+id,product_name,description,stock,is_available,price,images,slug
+1,jeans paint,jeans paint demo,18,1,1800,photos/products/ATX-Jeans.jpg,jeans-paint
+2,blue shirt,shirt demo,7,1,700,photos/products/Blue-Shirt.jpg,blue-shirt
+3,vest,demo vest,10,1,1000,photos/products/Great-Tshirt.jpg,vest
+4,shoes,demo shoes,12,1,2000,photos/products/jordan-true-flight-basketball-shoes.jpg,shoes
+5,korean jacket,demo,13,1,5000,photos/products/US-Polo-Assn_Jacket.jpg,korean-jacket
+6,shirt,demo shirt,12,1,1200,photos/products/Wrangler-Shirt.jpg,shirt
+7,sports shoes,demo shoes,12,1,1200,photos/products/Puma-Ferrari-Shoes.jpg,sports-shoes
+8,korean paint,demo paint,11,1,3999,photos/products/image2.jpg,korean-paint
