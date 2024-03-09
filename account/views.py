@@ -245,7 +245,6 @@ def my_orders(request):
         'orders': orders,
         
     }
-    print(orders[0].total)
     return render(request, 'accounts/my_orders.html', context)
 
 
