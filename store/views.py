@@ -17,6 +17,12 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import models
 from sentence_transformers import SentenceTransformer
 from .utils import load_data,prepare_data
+import re
+import unidecode
+
+def slugify(text):
+    text = unidecode.unidecode(text).lower()
+    return re.sub(r'[\W_]+', '-', text)
 
 
 # for sematic search 
@@ -238,6 +244,8 @@ def add_product(request):
             product_image=request.FILES.get('product_image')
             category_id=data.get('category')
             product_exists=Product.objects.filter(product_name=product_name).exists()
+            slug=slugify(product_name)
+
             if product_exists:
                 context={
                     'category':categories,
@@ -245,7 +253,7 @@ def add_product(request):
                         }
             else:
                 category=Category.objects.get(id=category_id)
-                Product.objects.create(product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
+                Product.objects.create(slug=slug,product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
                 context= {
                     'category':categories,
                     'message':"Item successfully added"
