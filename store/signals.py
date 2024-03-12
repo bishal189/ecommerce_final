@@ -14,8 +14,14 @@ def send_notification_to_users(sender, instance, created, **kwargs):
         subject = 'New Product Added'
         message = f"A new item '{instance.product_name}' has been added in category {instance.category.category_name} in our greatStore. Check it out!"
 
-        users =SubscribeModel.objects.get(category=instance.category)
-        print(users)
+        usersmodel =SubscribeModel.objects.filter(category=instance.category)
+        users=0
+        if len(usersmodel)==0:
+            return 
+        else:
+            users=usersmodel[0]
+        
+
         for user in users.subscribers.all():
             to_email=user.email
             print(to_email)

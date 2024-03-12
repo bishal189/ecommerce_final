@@ -31,7 +31,7 @@ client.recreate_collection(collection_name='product_collection',
 
 # vectorized our data create word embedaded
 model = SentenceTransformer('all-MiniLM-L6-v2')
-df = load_data('~/ecommerce_project/data1.csv')
+df = load_data('../data1.csv')
 docx, payload = prepare_data(df)
 # vectors=load_vectors('vectorized_courses.pickle')
 # print(docx)
