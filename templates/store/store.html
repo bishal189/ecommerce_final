@@ -145,8 +145,7 @@
 					<script>
 					async function subscribeToggler(value){
 					if (value){
-					document.getElementById('subscribed').style.display="block"
-					document.getElementById('subscribe').style.display="none"
+					
 					var url = "{% url 'subscribe' category_id=category_id %}";
 
 					var csrftoken = "{{ csrf_token }}";
@@ -161,14 +160,16 @@
 					const response=await fetch(url,fetchOptions)
 					const response_data=await response.json()
 					if (response.ok){
+					document.getElementById('subscribed').style.display="block"
+					document.getElementById('subscribe').style.display="none"
 					alert(response_data.message)
+
 					}else{
 					alert(response_data.error)
 					}
 
 					}else{
-					document.getElementById('subscribed').style.display="none"
-					document.getElementById('subscribe').style.display="block"
+
 					var url = "{% url 'unsubscribe' category_id=category_id %}";
 
 					var csrftoken = "{{ csrf_token }}";
@@ -183,7 +184,9 @@
 					const response=await fetch(url,fetchOptions)
 					const response_data=await response.json()
 					if (response.ok){
-					alert(response_data.message)
+						document.getElementById('subscribed').style.display="none"
+						document.getElementById('subscribe').style.display="block"
+						alert(response_data.message)
 					}else{
 					alert(response_data.error)
 					}
