@@ -31,10 +31,11 @@ class MyAccountManager(BaseUserManager):
         user = Account(
             email=email,
             username=username,
-            password=password,
+            
             first_name=first_name,
             last_name=last_name,
         )
+        user.set_password(password)
 
         user.is_admin = True
         user.is_active = True
