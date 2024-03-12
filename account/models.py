@@ -27,9 +27,9 @@ class MyAccountManager(BaseUserManager):
         print(user)
         return user
 
-    def create_superuser(self, first_name, last_name, email, username, password):
-        user = self.create_user(
-            email=self.normalize_email(email),
+    def create_superuser(self,first_name, last_name, email, username, password):
+        user = Account(
+            email=email,
             username=username,
             password=password,
             first_name=first_name,
@@ -49,8 +49,8 @@ class MyAccountManager(BaseUserManager):
             return cls.create_user(**kwargs)
         if user_type=="seller":
             return cls.create_user(**kwargs,user_type="seller")
-        elif user_type == 'superuser':
-            return cls.create_superuser(**kwargs, user_type='superuser')
+        if user_type=="superuser":
+            return cls.create_superuser(**kwargs)
         else:
             raise ValueError("Invalid user type")
 
