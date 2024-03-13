@@ -349,7 +349,16 @@ def edit_product(request,product_id):
     try:
         product=Product.objects.get(id=product_id)
         if request.method=="POST":
-            print(request.body)
+            for key in request.POST:
+        # Assuming your keys correspond directly to the fields of the 'product' object
+        # Update each field accordingly
+
+                if (key!="images"):
+                    setattr(product, key, request.POST[key])
+    # Save the updated product
+            if 'images' in request.FILES:
+                product.images = request.FILES['images']
+            product.save()
         print(product)
         context={
             'product':product
