@@ -245,6 +245,7 @@ def add_product(request):
             category_id=data.get('category')
             product_exists=Product.objects.filter(product_name=product_name).exists()
             slug=slugify(product_name)
+            user=request.user
 
             if product_exists:
                 context={
@@ -253,7 +254,7 @@ def add_product(request):
                         }
             else:
                 category=Category.objects.get(id=category_id)
-                Product.objects.create(slug=slug,product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
+                Product.objects.create(created_by=user,slug=slug,product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
                 context= {
                     'category':categories,
                     'message':"Item successfully added"

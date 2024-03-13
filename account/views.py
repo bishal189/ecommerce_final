@@ -6,7 +6,7 @@ from orders.models import Order, OrderProduct
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
+from store.models import Product
 # Verification email
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -310,3 +310,61 @@ def order_detail(request, order_id):
         'subtotal': subtotal,
     }
     return render(request, 'accounts/order_detail.html', context)
+
+@login_required(login_url='login')
+def seller_products(request):
+    try:
+        products=Product.objects.filter(created_by=request.user).order_by('id')
+        print(products)
+        if len(products)==0:
+            return render(request,'accounts/my_products.html')
+        context={
+            'products':products
+            }
+        return render(request,'accounts/my_products.html',context)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return render(request,'accounts/my_products.html')
+
+@login_required(login_url='login')
+def delete_product(request,product_id):
+    try:
+        product=Product.objects.get(id=product_id).delete()
+        products=Product.objects.filter(created_by=request.user).order_by('id')
+        print(products)
+        if len(products)==0:
+            return render(request,'accounts/my_products.html')
+        context={
+            'products':products
+            }
+        return render(request,'accounts/my_products.html',context)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return f"unexpected error {error}"
+
+@login_required(login_url='login')
+def edit_product(request,product_id):
+    try:
+        product=Product.objects.get(id=product_id)
+        if request.method=="POST":
+            for key in request.POST:
+        # Assuming your keys correspond directly to the fields of the 'product' object
+        # Update each field accordingly
+
+                if (key!="images"):
+                    setattr(product, key, request.POST[key])
+    # Save the updated product
+            if 'images' in request.FILES:
+                product.images = request.FILES['images']
+            product.save()
+        print(product)
+        context={
+            'product':product
+            }
+        return render(request,'accounts/edit_product.html',context)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return f"unexpected error {error}"
