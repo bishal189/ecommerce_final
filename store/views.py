@@ -253,8 +253,8 @@ def add_product(request):
                     'error':"Product already exists"
                         }
             else:
-                category=Category.objects.get(created_by=user,id=category_id)
-                Product.objects.create(slug=slug,product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
+                category=Category.objects.get(id=category_id)
+                Product.objects.create(created_by=user,slug=slug,product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
                 context= {
                     'category':categories,
                     'message':"Item successfully added"

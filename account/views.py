@@ -326,3 +326,36 @@ def seller_products(request):
         error=str(e)
         print(error)
         return f"unexpected error {error}"
+
+@login_required(login_url='login')
+def delete_product(request,product_id):
+    try:
+        product=Product.objects.get(id=product_id).delete()
+        products=Product.objects.filter(created_by=request.user).order_by('id')
+        print(products)
+        if len(products)==0:
+            return render(request,'accounts/my_products.html')
+        context={
+            'products':products
+            }
+        return render(request,'accounts/my_products.html',context)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return f"unexpected error {error}"
+
+@login_required(login_url='login')
+def edit_product(request,product_id):
+    try:
+        product=Product.objects.get(id=product_id)
+        if request.method=="POST":
+            print(request.body)
+        print(product)
+        context={
+            'product':product
+            }
+        return render(request,'accounts/edit_product.html',context)
+    except Exception as e:
+        error=str(e)
+        print(error)
+        return f"unexpected error {error}"
