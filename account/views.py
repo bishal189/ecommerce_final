@@ -325,7 +325,7 @@ def seller_products(request):
     except Exception as e:
         error=str(e)
         print(error)
-        return f"unexpected error {error}"
+        return render(request,'accounts/my_products.html')
 
 @login_required(login_url='login')
 def delete_product(request,product_id):
