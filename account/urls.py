@@ -18,6 +18,7 @@ urlpatterns = [
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('change_password/', views.change_password, name='change_password'),
     path('order_detail/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('my_products/',views.seller_products,name="my_products"),
     
  
 ]

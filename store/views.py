@@ -245,6 +245,7 @@ def add_product(request):
             category_id=data.get('category')
             product_exists=Product.objects.filter(product_name=product_name).exists()
             slug=slugify(product_name)
+            user=request.user
 
             if product_exists:
                 context={
@@ -252,7 +253,7 @@ def add_product(request):
                     'error':"Product already exists"
                         }
             else:
-                category=Category.objects.get(id=category_id)
+                category=Category.objects.get(created_by=user,id=category_id)
                 Product.objects.create(slug=slug,product_name=product_name,description=product_description,images=product_image,stock=stock_count,price=item_price,category=category)
                 context= {
                     'category':categories,
