@@ -155,12 +155,16 @@ MEDIA_ROOT=BASE_DIR /'media'
 
 
 
-
+DEFAULT_FROM_EMAIL = 'email@yourserver.com'
+SERVER_EMAIL = 'email@yourserver.com'
 #smtp configuration
 # email verifcation in django
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'heritagehive872@gmail.coms'
-EMAIL_HOST_PASSWORD = 'lcdx fifo kpsq ttaa'
+# EMAIL_HOST_USER = 'murmubishal051@gmail.com'
+# EMAIL_HOST_PASSWORD = 'bitf bbka xnmy sbue'
+
+EMAIL_HOST_USER='heritagehive872@gmail.com'
+EMAIL_HOST_PASSWORD='qozv drew svkw ufgx'
