@@ -1,9 +1,25 @@
-id,product_name,description,stock,is_available,price,images,slug
-1,jeans paint,jeans paint demo,18,1,1800,photos/products/ATX-Jeans.jpg,jeans-paint
-2,blue shirt,shirt demo,7,1,700,photos/products/Blue-Shirt.jpg,blue-shirt
-3,vest,demo vest,10,1,1000,photos/products/Great-Tshirt.jpg,vest
-4,shoes,demo shoes,12,1,2000,photos/products/jordan-true-flight-basketball-shoes.jpg,shoes
-5,korean jacket,demo,13,1,5000,photos/products/US-Polo-Assn_Jacket.jpg,korean-jacket
-6,shirt,demo shirt,12,1,1200,photos/products/Wrangler-Shirt.jpg,shirt
-7,sports shoes,demo shoes,12,1,1200,photos/products/Puma-Ferrari-Shoes.jpg,sports-shoes
-8,korean paint,demo paint,11,1,3999,photos/products/image2.jpg,korean-paint
+id,product_name,description
+7,Zoha,Emboired Zoha attire
+8,Falak,Falak attire
+9,Dastaan,Dastaan attire
+10,Raw Silk Eid Collection, Raw silk attire
+11,RangReza,RangReza Attire
+12,Ayleen,Ayleen attire
+13,Minahl,Minahl attire
+14,Golden Tara Figures – Antique Statue,Golden Tara Figures – Antique Statue craft
+15,wood screw,wooden screw which is used in home
+16,spoon,wooden spoon made in local home
+17,Natraj Statue,Natraj Statue craft
+18,Golden Buddha Stupa,Golden Buddha Stupa craft
+19,chopping board,chopping board for chopping vegitables
+20,tradational camera,tradational camera
+21,Wooden Ganesh Statue,Wooden Ganesh Statue craft
+22,Artistic Wooden Door,Artistic Wooden Door craft
+23,Beauty Mask,Beauty Mask craft
+24,spoon bundle,spoon bundle
+25,glass birds,glass birds
+26,wooden basket,wooden basket
+27,wine glass,wine glass to drink wine
+29,celebration,clebration
+30,chairs,chairs which is used in hotel and home
+31,Headphone,headphone to listen music and loss on the music environment
