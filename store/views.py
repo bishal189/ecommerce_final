@@ -280,21 +280,26 @@ def add_product(request):
 
 
 def ranges(request):
-    min_price=request.GET.get('min')
-    max_price=request.GET.get('max')
-    
-       
-    all_product = Product.objects.all()
-    if min_price and max_price:  # Filter if both min and max prices are provided
-        all_products = all_products.filter(price__gte=min_price, price__lte=max_price)
+    min_price = request.GET.get('min')
+    max_price = request.GET.get('max')
 
-    paginator=Paginator(all_product,6)
-    page=request.GET.get('page')
-    paged_products=paginator.get_page(page)
-    count=all_product.count()
-    context={
-        'all_products':paged_products,
-        'count':count
-    }
-    return render(request,'store/store.html',context)
+   
+
+    all_products = Product.objects.all()  # Get all products initially
+   
+
+    if min_price is not None and max_price is not None:  # Check if both min and max prices are provided
+        all_products = all_products.filter(price__gte=min_price, price__lte=max_price)
     
+   
+
+    paginator = Paginator(all_products, 6)
+    page_number = request.GET.get('page')
+    paged_products = paginator.get_page(page_number)
+    count = all_products.count()
+
+    context = {
+        'all_products': paged_products,
+        'count': count
+    }
+    return render(request, 'store/store.html', context)
