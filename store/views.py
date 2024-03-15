@@ -37,7 +37,7 @@ client.recreate_collection(collection_name='product_collection',
 
 # vectorized our data create word embedaded
 model = SentenceTransformer('all-MiniLM-L6-v2')
-df = load_data('~/ecommerce_final/data1.csv')
+df = load_data('/home/bishalm/Desktop/ecommerce/data1.csv')
 docx, payload = prepare_data(df)
 # vectors=load_vectors('vectorized_courses.pickle')
 # print(docx)
@@ -277,3 +277,24 @@ def add_product(request):
                     'error':f"Some unexpected error occured {error}"
                     }
         return render(request,'accounts/add_products.html',context)
+
+
+def ranges(request):
+    min_price=request.GET.get('min')
+    max_price=request.GET.get('max')
+    
+       
+    all_product = Product.objects.all()
+    if min_price and max_price:  # Filter if both min and max prices are provided
+        all_products = all_products.filter(price__gte=min_price, price__lte=max_price)
+
+    paginator=Paginator(all_product,6)
+    page=request.GET.get('page')
+    paged_products=paginator.get_page(page)
+    count=all_product.count()
+    context={
+        'all_products':paged_products,
+        'count':count
+    }
+    return render(request,'store/store.html',context)
+    
