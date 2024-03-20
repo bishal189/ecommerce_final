@@ -37,7 +37,7 @@ client.recreate_collection(collection_name='product_collection',
 
 # vectorized our data create word embedaded
 model = SentenceTransformer('all-MiniLM-L6-v2')
-df = load_data('/home/bishalm/Desktop/ecommerce/data1.csv')
+df = load_data('~/ecommerce_final/data1.csv')
 docx, payload = prepare_data(df)
 # vectors=load_vectors('vectorized_courses.pickle')
 # print(docx)
@@ -71,7 +71,7 @@ def store(request,category_slug=None):
     if category_slug!=None:
         categories=get_object_or_404(Category,slug=category_slug)
         all_product=Product.objects.all().filter(is_available=True,category=categories)
-        paginator=Paginator(all_product,1)
+        paginator=Paginator(all_product,5)
         page=request.GET.get('page')
         paged_products=paginator.get_page(page)
         count=all_product.count()
