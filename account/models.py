@@ -20,21 +20,21 @@ class UserFactory(BaseUserManager):
         user.save()
         return user
 
-    # def create_superuser(self,first_name, last_name, email, username, password):
-    #     user = Account(
-    #         email=email,
-    #         username=username,
-    #         first_name=first_name,
-    #         last_name=last_name,
-    #     )
-    #     user.set_password(password)
-    #
-    #     user.is_admin = True
-    #     user.is_active = True
-    #     user.is_staff = True
-    #     user.is_superadmin = True
-    #     user.save(using=self._db)
-    #     return user
+    def create_superuser(self,first_name, last_name, email, username, password):
+        user = Account(
+            email=email,
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        user.set_password(password)
+
+        user.is_admin = True
+        user.is_active = True
+        user.is_staff = True
+        user.is_superadmin = True
+        user.save(using=self._db)
+        return user
 
     @classmethod
     def create_account(self, user_type='buyer', **kwargs):
@@ -44,8 +44,6 @@ class UserFactory(BaseUserManager):
         if user_type=="seller":
             seller = SellerFactory.create_seller(**kwargs)
             return seller
-        if user_type=="superuser"
-            print("in superuser")
 
         else:
             raise ValueError("Invalid user type")
