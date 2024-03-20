@@ -107,3 +107,9 @@ class UserProfile(models.Model):
 
     def full_address(self):
         return f'{self.address_line_1} {self.address_line_2}'
+
+
+class Logo(models.Model):
+    category_image=models.ImageField(upload_to='photos/logo',blank=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
