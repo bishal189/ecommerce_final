@@ -64,7 +64,8 @@
                 </div>
               </div>
               <hr>
-
+                {% if request.user.is_seller %}
+                {% else %}
               {% if single_product.stock <= 0 %} <h5 class="btn btn-danger">Out of stock</h5>
 
 
@@ -74,7 +75,7 @@
 
                 <button type="submit" class="btn  btn-primary"> <span class="text">Add to
                     cart</span> <i class="fas fa-shopping-cart"></i></button>
-
+                  {% endif %}
                 {% endif %}
 
             </article> <!-- product-info-aside .// -->

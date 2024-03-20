@@ -50,10 +50,8 @@ $(document).ready(function() {
 
 </head>
 <body>
-{% if  request.user.is_seller %}
-{%else %}
+
     {% include 'include/header.html' %}
-{% endif %}
     {% block content %}
     {% endblock %}
 

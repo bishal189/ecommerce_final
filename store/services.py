@@ -12,8 +12,8 @@ def load_data(data):
 
 
 def prepare_data(df):
-    docx = df['product_name'].tolist()
-    payload = df[['id','product_name', 'images','stock','price','is_available','slug', 'description']].to_dict('records')
+    docx = df[['product_name', 'description']].values.tolist()
+    payload = df[['id','product_name','description']].to_dict('records')
     return docx, payload
 
 

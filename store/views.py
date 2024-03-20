@@ -9,6 +9,9 @@ from .forms import ReviewForm
 from django.contrib import messages
 from cart.models import Order_Product
 from django.http import JsonResponse
+from django.core.mail import EmailMessage
+
+
 from subscribe.models import SubscribeModel
 # Create your views here.
 from .models import Product
@@ -165,12 +168,13 @@ def search(request):
             # vectorized the search term
             vectorized_text = model.encode(keyword).tolist()
             products= client.search(collection_name='product_collection',
-                        query_vector=vectorized_text, limit=5)
+                        query_vector=vectorized_text)
             # count=products.count()            
             #search the vectorDB and and get recomandation
             result=[]
+            print(products)
             for product in products:
-                if product.score>0.7:
+                if product.score>0.4:
                     data=Product.objects.get(id=product.payload['id'])
                     result.append(data)
         context={
@@ -259,6 +263,20 @@ def add_product(request):
                     'category':categories,
                     'message':"Item successfully added"
                     }
+                    
+                subject = 'New Product Added'
+                message = f"A new item '{product_name}' has been added in category {category.category_name} in our greatStore. Check it out!"
+
+                usersmodel =SubscribeModel.objects.filter(category=category)
+                users=0
+                if len(usersmodel)==0:
+                    return 
+                else:
+                    users=usersmodel[0]
+                for user in users.subscribers.all():
+                    to_email=user.email
+                    send_email = EmailMessage(subject, message, to=[to_email])
+                    send_email.send()
             return render(request,'accounts/add_products.html',context)
 
         elif request.method=="GET":
@@ -276,3 +294,29 @@ def add_product(request):
                     'error':f"Some unexpected error occured {error}"
                     }
         return render(request,'accounts/add_products.html',context)
+
+
+def ranges(request):
+    min_price = request.GET.get('min')
+    max_price = request.GET.get('max')
+
+   
+
+    all_products = Product.objects.all()  # Get all products initially
+   
+
+    if min_price is not None and max_price is not None:  # Check if both min and max prices are provided
+        all_products = all_products.filter(price__gte=min_price, price__lte=max_price)
+    
+   
+
+    paginator = Paginator(all_products, 6)
+    page_number = request.GET.get('page')
+    paged_products = paginator.get_page(page_number)
+    count = all_products.count()
+
+    context = {
+        'all_products': paged_products,
+        'count': count
+    }
+    return render(request, 'store/store.html', context)

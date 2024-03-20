@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
-
+from abc import ABC, abstractmethod
 # Create your models here.
 
 from django.contrib.auth.models import BaseUserManager

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistrationForm, UserForm, UserProfileForm
 
 from .models import Account, UserProfile
-from orders.models import Order, OrderProduct
+from cart.models import Order, Order_Product
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -129,7 +129,10 @@ def login(request):
                     nextPage = params['next']
                     return redirect(nextPage)
             except:
-                return redirect('dashboard')
+                if user.is_seller:
+                    return redirect('dashboard')
+                else:
+                    return redirect('home')
         else:
             messages.error(request, 'Invalid login credentials')
             return redirect('login')
@@ -238,9 +241,18 @@ def resetPassword(request):
 @login_required(login_url='login')
 def my_orders(request):
     user=request.user
-    orders = Order.objects.filter(user=user,is_ordered=True).order_by('-created_at')
+    orders=0
+    if request.user.is_seller:
+        orders=Order_Product.objects.filter(product__created_by=request.user)
+        context = {
+        'order_product': orders,
+        
+    }
+        
+    else:
+        orders = Order.objects.filter(user=user,is_ordered=True).order_by('-created_at')
    
-    context = {
+        context = {
         'orders': orders,
         
     }
@@ -298,7 +310,7 @@ def change_password(request):
 
 @login_required(login_url='login')
 def order_detail(request, order_id):
-    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+    order_detail = Order_Product.objects.filter(order__order_number=order_id)
     order = Order.objects.get(order_number=order_id)
     subtotal = 0
     for i in order_detail:

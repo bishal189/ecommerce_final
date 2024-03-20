@@ -29,8 +29,11 @@
 				    </tr>
 				  </thead>
 				  <tbody>
+					{% if orders %}
+					jslflasfj;a
 						{% for order in orders %}
 				    <tr>
+						
 				      <th scope="row"><a href="{% url 'order_details' order.order_number %}">{{order.order_number}}</a></th>
 				      <td>{{order.full_name}}</td>
 				      <td>{{order.phone}}</td>
@@ -38,6 +41,18 @@
 							<td>{{order.created_at}}</td>
 				    </tr>
 				{% endfor %}
+				{% else %}
+				{% for order in order_product %}
+				    <tr>
+						
+				      <th scope="row"><a href="{% url 'order_details' order.order.order_number %}">{{order.order.order_number}}</a></th>
+				      <td>{{order.order.full_name}}</td>
+				      <td>{{order.order.phone}}</td>
+				      <td>${{order.order.total}}</td>
+							<td>{{order.order.created_at}}</td>
+				    </tr>
+				{% endfor %}
+				{% endif %}
 
 				  </tbody>
 				</table>
