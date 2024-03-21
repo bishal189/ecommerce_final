@@ -320,11 +320,13 @@ def order_detail(request, order_id):
     subtotal = 0
     for i in order_detail:
         subtotal += i.product_price * i.quantity
+    order_total=subtotal+0.11*subtotal    
 
     context = {
         'order_detail': order_detail,
         'order': order,
         'subtotal': subtotal,
+        'order_total':order_total
     }
     return render(request, 'accounts/order_detail.html', context)
 
