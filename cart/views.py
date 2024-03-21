@@ -552,7 +552,7 @@ def order_complete(request):
         for i in ordered_products:
             subtotal+=i.product_price*i.quantity;
 
-        total=subtotal+36    
+        total=subtotal+0.11*subtotal    
 
         context={
             'order':order,
