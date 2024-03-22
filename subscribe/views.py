@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from Category.models import Category
 from subscribe.models import SubscribeModel
 from account.models import Account
+from subscribe.classes import ConcreteSubject
 # Create your views here.
 def subscribe(request,category_id):
    try:
@@ -11,7 +12,8 @@ def subscribe(request,category_id):
        category=Category.objects.get(id=category_id)
        print(category)
        subscribed, created = SubscribeModel.objects.get_or_create(category=category)
-       subscribed.attach(user)
+       subject=ConcreteSubject()
+       subject.attach(subscribed,user)
        return JsonResponse({'message':"Category Subscribed"},status=200)
 
    except Exception as e:
@@ -28,7 +30,8 @@ def unsubscribe(request,category_id):
 
        category=Category.objects.get(id=category_id)
        subscribed = SubscribeModel.objects.get(category=category)
-       subscribed.detach(user)
+       subject=ConcreteSubject()
+       subject.detach(subscribed,user)
        return JsonResponse({'message':"Category Unsubscribed"},status=200)
     except Exception as e:
         error=str(e)

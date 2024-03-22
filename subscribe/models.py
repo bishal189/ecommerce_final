@@ -8,13 +8,3 @@ class SubscribeModel(models.Model):
     subscribers=models.ManyToManyField(Account)
 
 
-    def attach(self, observer):
-        print("attached")
-        self.subscribers.add(observer)
-
-    def detach(self, observer):
-        self.subscribers.remove(observer)
-
-    def notify(self,subject,message):
-        for subscriber in self.subscribers.all():
-            subscriber.update(self,subject,message)

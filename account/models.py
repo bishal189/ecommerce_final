@@ -141,9 +141,7 @@ class Account(AbstractBaseUser):
     def has_module_perms(self,add_label):
         return True
 
-    def update(self, subject,message):
-        send_email = EmailMessage(subject, message, to=[self.email])
-        send_email.send()
+
 
 
 
