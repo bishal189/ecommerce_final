@@ -270,13 +270,14 @@ def add_product(request):
                 usersmodel =SubscribeModel.objects.filter(category=category)
                 users=0
                 if len(usersmodel)==0:
-                    return 
+                    pass
                 else:
                     users=usersmodel[0]
-                for user in users.subscribers.all():
-                    to_email=user.email
-                    send_email = EmailMessage(subject, message, to=[to_email])
-                    send_email.send()
+                    users.notify(subject,message)
+                    # for user in users.subscribers.all():
+                    #     to_email=user.email
+                    #     send_email = EmailMessage(subject, message, to=[to_email])
+                    #     send_email.send()
             return render(request,'accounts/add_products.html',context)
 
         elif request.method=="GET":

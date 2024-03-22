@@ -2,8 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 from abc import ABC, abstractmethod
 # Create your models here.
-
+from subscribe.interface import Observer
 from django.contrib.auth.models import BaseUserManager
+from django.core.mail import EmailMessage
 
 class UserFactory(BaseUserManager):
     @staticmethod
@@ -15,7 +16,6 @@ class UserFactory(BaseUserManager):
             raise ValueError('The Email field must be set')
         email = email
         user = Account(email=email, **extra_fields)
-        print(user)
         user.set_password(password)
         user.save()
         return user
@@ -28,7 +28,6 @@ class UserFactory(BaseUserManager):
             last_name=last_name,
         )
         user.set_password(password)
-
         user.is_admin = True
         user.is_active = True
         user.is_staff = True
@@ -65,15 +64,6 @@ class SellerFactory(UserFactory):
         extra_fields.setdefault('is_seller', True)
         return UserFactory.create_user(email, password, **extra_fields)
 
-class SuperuserFactory(UserFactory):
-    @staticmethod
-    def create_superuser(email, password, **extra_fields):
-        """
-        Factory method to create a new superuser.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return UserFactory.create_user(email, password, **extra_fields)
 
 '''
 class MyAccountManager(BaseUserManager):
@@ -140,7 +130,6 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS=['username','first_name','last_name']
 
     objects=UserFactory()
-
     def __str__(self):
         return self.email
     
@@ -151,6 +140,11 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self,add_label):
         return True
+
+    def update(self, subject,message):
+        send_email = EmailMessage(subject, message, to=[self.email])
+        send_email.send()
+
 
 
 
