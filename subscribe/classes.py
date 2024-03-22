@@ -11,10 +11,10 @@ class Observer(ABC):
         pass
 #Abstract class for attaching,detaching and notifying observer based on subscribe model
 class Subject:
-    def attach(self, subscribe,observer):
+    def register(self, subscribe,observer):
         pass
 
-    def detach(self,subscribe, observer):
+    def unregister(self,subscribe, observer):
         pass
 
     def notify(self,subscribe,subject,message):
@@ -28,11 +28,11 @@ class ConcreteObserver(Observer):
 
 class ConcreteSubject(Subject):
     #Here subscribe is an instance of SubscribeModel and observer is an instance of Account Model
-    def attach(self,subscribe, observer):
+    def register(self,subscribe, observer):
         print("attached")
         subscribe.subscribers.add(observer)
 
-    def detach(self,subscribe, observer):
+    def unregister(self,subscribe, observer):
         subscribe.subscribers.remove(observer)
 
     #Get all subscribers from subscribe(SubscribeModel Instance) and update observer to just send message

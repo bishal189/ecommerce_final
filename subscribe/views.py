@@ -13,7 +13,7 @@ def subscribe(request,category_id):
        print(category)
        subscribed, created = SubscribeModel.objects.get_or_create(category=category)
        subject=ConcreteSubject()
-       subject.attach(subscribed,user)
+       subject.register(subscribed,user)
        return JsonResponse({'message':"Category Subscribed"},status=200)
 
    except Exception as e:
@@ -31,7 +31,7 @@ def unsubscribe(request,category_id):
        category=Category.objects.get(id=category_id)
        subscribed = SubscribeModel.objects.get(category=category)
        subject=ConcreteSubject()
-       subject.detach(subscribed,user)
+       subject.unregister(subscribed,user)
        return JsonResponse({'message':"Category Unsubscribed"},status=200)
     except Exception as e:
         error=str(e)
