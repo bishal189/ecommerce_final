@@ -2,9 +2,70 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 from abc import ABC, abstractmethod
 # Create your models here.
-
+from subscribe.interface import Observer
 from django.contrib.auth.models import BaseUserManager
+from django.core.mail import EmailMessage
 
+class UserFactory(BaseUserManager):
+    @staticmethod
+    def create_user(email, password, **extra_fields):
+        """
+        Factory method to create a new user.
+        """
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = email
+        user = Account(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self,first_name, last_name, email, username, password):
+        user = Account(
+            email=email,
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        user.set_password(password)
+        user.is_admin = True
+        user.is_active = True
+        user.is_staff = True
+        user.is_superadmin = True
+        user.save(using=self._db)
+        return user
+
+    @classmethod
+    def create_account(self, user_type='buyer', **kwargs):
+        if user_type == 'buyer':
+            buyer = BuyerFactory.create_buyer(**kwargs)
+            return buyer
+        if user_type=="seller":
+            seller = SellerFactory.create_seller(**kwargs)
+            return seller
+
+        else:
+            raise ValueError("Invalid user type")
+
+class BuyerFactory(UserFactory):
+    @staticmethod
+    def create_buyer(email, password, **extra_fields):
+        """
+        Factory method to create a new buyer.
+        """
+        return UserFactory.create_user(email, password, **extra_fields)
+
+class SellerFactory(UserFactory):
+    @staticmethod
+    def create_seller(email, password, **extra_fields):
+        """
+        Factory method to create a new seller.
+        """
+        extra_fields.setdefault('is_seller', True)
+        return UserFactory.create_user(email, password, **extra_fields)
+
+
+'''
 class MyAccountManager(BaseUserManager):
     def create_user( first_name, last_name, username, email, password=None,user_type="buyer"):
         if not email:
@@ -44,16 +105,7 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    @classmethod
-    def create_account(cls, user_type='buyer', **kwargs):
-        if user_type == 'buyer':
-            return cls.create_user(**kwargs)
-        if user_type=="seller":
-            return cls.create_user(**kwargs,user_type="seller")
-        if user_type=="superuser":
-            return cls.create_superuser(**kwargs)
-        else:
-            raise ValueError("Invalid user type")
+'''
 
 class Account(AbstractBaseUser):
     first_name= models.CharField(max_length=50)
@@ -77,8 +129,7 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username','first_name','last_name']
 
-    objects=MyAccountManager()
-
+    objects=UserFactory()
     def __str__(self):
         return self.email
     
@@ -89,6 +140,9 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self,add_label):
         return True
+
+
+
 
 
 

@@ -11,7 +11,7 @@ from cart.models import Order_Product
 from django.http import JsonResponse
 from django.core.mail import EmailMessage
 
-
+from subscribe.classes import ConcreteSubject
 from subscribe.models import SubscribeModel
 # Create your views here.
 from .models import Product
@@ -267,16 +267,18 @@ def add_product(request):
                 subject = 'New Product Added'
                 message = f"A new item '{product_name}' has been added in category {category.category_name} in our greatStore. Check it out!"
 
-                usersmodel =SubscribeModel.objects.filter(category=category)
+                subscribeModel =SubscribeModel.objects.filter(category=category)
                 users=0
-                if len(usersmodel)==0:
-                    return 
+                if len(subscribeModel)==0:
+                    pass
                 else:
-                    users=usersmodel[0]
-                for user in users.subscribers.all():
-                    to_email=user.email
-                    send_email = EmailMessage(subject, message, to=[to_email])
-                    send_email.send()
+                    subscribe=subscribeModel[0]
+                    subject=ConcreteSubject()
+                    subject.notify(subscribe,subject,message)
+                    # for user in users.subscribers.all():
+                    #     to_email=user.email
+                    #     send_email = EmailMessage(subject, message, to=[to_email])
+                    #     send_email.send()
             return render(request,'accounts/add_products.html',context)
 
         elif request.method=="GET":
