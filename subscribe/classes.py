@@ -1,10 +1,8 @@
 from django.core.mail import EmailMessage
-# interfaces.py
-
 from abc import ABC, abstractmethod
 #self is not mandatory it was used because those impl were previously used in models
-
 #Implement ABC(Absctract base class with update method that sends message implementation in class.py)
+
 class Observer(ABC):
     @abstractmethod
     def update(self,subject,message,email):
