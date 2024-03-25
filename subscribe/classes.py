@@ -20,14 +20,13 @@ class Subject:
 
 class ConcreteObserver(Observer):
     def update(self,subject,message,email):
-        print("In update,subject,message,email")
+        print("email sent to ",email)
         send_email = EmailMessage(subject, message, to=[email])
         send_email.send()
 
 class ConcreteSubject(Subject):
     #Here subscribe is an instance of SubscribeModel and observer is an instance of Account Model
     def register(self,subscribe, observer):
-        print("attached")
         subscribe.subscribers.add(observer)
 
     def unregister(self,subscribe, observer):
