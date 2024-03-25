@@ -3,6 +3,7 @@
 
 from .models import Category
 
-def menu_links(request):
-    links=Category.objects.all()
-    return dict(links=links)
+def links(request):
+    links_category=Category.objects.all().order_by('-id')
+    print(links)
+    return {'links': links_category}

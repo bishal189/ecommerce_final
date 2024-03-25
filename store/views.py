@@ -273,12 +273,9 @@ def add_product(request):
                     pass
                 else:
                     subscribe=subscribeModel[0]
-                    subject=ConcreteSubject()
-                    subject.notify(subscribe,subject,message)
-                    # for user in users.subscribers.all():
-                    #     to_email=user.email
-                    #     send_email = EmailMessage(subject, message, to=[to_email])
-                    #     send_email.send()
+                    instance_subject=ConcreteSubject()
+                    instance_subject.notify(subscribe,subject,message)
+
             return render(request,'accounts/add_products.html',context)
 
         elif request.method=="GET":
