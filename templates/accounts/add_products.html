@@ -37,11 +37,11 @@
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
-							<label>Items In Stock</label>
-							<input  required type="number" name="stock_count" class="form-control" />
+							<label for="item_stock">Items In Stock</label>
+							<input  required type="number" name="item_stock" class="form-control" />
 						</div>
 						<div class="form-group">
-						<label>Item Price</label>
+						<label for="item_price">Item Price</label>
 						<input  required type="number" name="item_price" class="form-control" />
 					</div>
 						<div class="form-group col-md-6">
@@ -58,7 +58,6 @@
 						{% endfor %}
 						</select>
 					</div>
-
 					<input type="submit" value="Save" class="btn btn-primary">
 				</form>
 			</div>
@@ -71,6 +70,36 @@
 </div> <!-- row.// -->
 </div>
 
+<script>
+console.log("hello")
+    document.addEventListener('DOMContentLoaded', function () {
+        const priceInput = document.querySelector('input[name="item_price"]');
+        const stockInput = document.querySelector('input[name="item_stock"]');
+        const priceLabel = document.querySelector('label[for="item_price"]');
+        const stockLabel = document.querySelector('label[for="item_stock"]');
+
+        priceInput.addEventListener('input', function () {
+            if (parseFloat(priceInput.value) < 0) {
+                priceLabel.innerText = 'Price cannot be negative.';
+                                priceLabel.style.color = 'red';
+            } else {
+                priceLabel.innerText = 'Item Price';
+                                priceLabel.style.color = 'black';
+            }
+        });
+
+        stockInput.addEventListener('input', function () {
+            if (parseInt(stockInput.value) < 0) {
+                stockLabel.innerText = 'Stock cannot be negative.';
+				stockLabel.style.color = 'red';
+
+            } else {
+                stockLabel.innerText = 'Items in Stock';
+                stockLabel.style.color='black'
+            }
+        });
+    });
+</script>
 
 </section>
 

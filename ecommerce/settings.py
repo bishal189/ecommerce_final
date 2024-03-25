@@ -137,9 +137,13 @@ USE_TZ = True
 
 # static file configurations
 STATIC_URL = '/static/'
-STATICFILES_DIRS=[
-    BASE_DIR/'static'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+
 ]
+
+
 # settings.py
 
 # Use a BigAutoField for all models by default

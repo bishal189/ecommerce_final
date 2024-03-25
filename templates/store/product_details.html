@@ -97,7 +97,6 @@
 
 
         <form action="{% url 'submit_review' single_product.id %}" method="POST">
-
           {% csrf_token %}
           <h5>write Your Reviews</h5>
           <div>
@@ -134,14 +133,13 @@
             </textarea>
             <br>
             {% if user.is_authenticated %}
-
             {% if orders %}
+
             <input type="submit" value="Submit Review" class="btn btn-primary">
             {% else %}
             <p>You must Purchased that product in to post a Review.</p>
-
-
             {% endif %}
+
             {% else %}
 
             <p>You must be logged in to post a Review.</p>

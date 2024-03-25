@@ -250,6 +250,13 @@ def add_product(request):
             product_exists=Product.objects.filter(product_name=product_name).exists()
             slug=slugify(product_name)
             user=request.user
+            if int(stock_count)<0 or int(item_price)<0:
+                context={
+                    'error':"Stock count and Item price cannot be negative",
+                    'category':categories,
+                    }
+                return render(request,'accounts/add_products.html',context)
+
 
             if product_exists:
                 context={
