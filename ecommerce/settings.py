@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'Category.context_processors.links',
                 'cart.context_processors.counter',
+           
             ],
         },
     },
@@ -136,11 +137,9 @@ USE_TZ = True
 
 # static file configurations
 STATIC_URL = '/static/'
-STATIC_ROOT=BASE_DIR /'static'
 STATICFILES_DIRS=[
-    'ecommerce/static',
+    BASE_DIR/'static'
 ]
-
 # settings.py
 
 # Use a BigAutoField for all models by default

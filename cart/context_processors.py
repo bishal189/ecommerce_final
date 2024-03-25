@@ -1,9 +1,14 @@
 from .models import Cart,Cartitem
+# from account.models import Logo
 def _cart_id(request):
     cart=request.session.session_key
     if not cart:
         cart=request.session.create()
     return cart    
+
+# def logo(request):
+#     logo=Logo.objects.all()
+#     return dict(logo=logo)
 
 
 def counter(request):

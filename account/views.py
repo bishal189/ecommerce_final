@@ -165,8 +165,13 @@ def activate(request, uidb64, token):
 
 @login_required(login_url = 'login')
 def dashboard(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
-    orders_count = orders.count()
+    orders_count=-1
+    if request.user.is_seller:
+      orders=Order_Product.objects.filter(product__created_by=request.user)  
+      orders_count=orders.count()
+    else:
+        orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+        orders_count = orders.count()
 
     userprofile = UserProfile.objects.get(user_id=request.user.id)
     context = {
@@ -315,11 +320,13 @@ def order_detail(request, order_id):
     subtotal = 0
     for i in order_detail:
         subtotal += i.product_price * i.quantity
+    order_total=subtotal+0.11*subtotal    
 
     context = {
         'order_detail': order_detail,
         'order': order,
         'subtotal': subtotal,
+        'order_total':order_total
     }
     return render(request, 'accounts/order_detail.html', context)
 

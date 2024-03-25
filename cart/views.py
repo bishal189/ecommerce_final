@@ -250,8 +250,9 @@ def cart(request,total=0,quantity=0,cart_items=None):
             total+=(cart_item.product.price*cart_item.quantity)
             quantity+=cart_item.quantity
 
-        tax=(2*total)/100
-        grand_total=total+tax;    
+        tax=11
+
+        grand_total=total+0.11*total;    
 
 
     except ObjectDoesNotExist:
@@ -328,8 +329,8 @@ def checkout(request,total=0,quantity=0,cart_items=None):
             total+=(cart_item.product.price*cart_item.quantity)
             quantity+=cart_item.quantity
 
-        tax=(2*total)/100
-        grand_total=total+tax;    
+        tax=11
+        grand_total=total+0.11*total;    
 
 
     except ObjectDoesNotExist:
@@ -382,8 +383,8 @@ def checkout(request,total=0,quantity=0,cart_items=None):
                 'order':order,
                 'cart_items':cart_items,
                 'grand_total':grand_total,
-                 'tax':tax,
-                 'total':total,
+                'tax':tax,
+                'total':total,
 
             }
 
@@ -551,7 +552,7 @@ def order_complete(request):
         for i in ordered_products:
             subtotal+=i.product_price*i.quantity;
 
-        total=subtotal+36    
+        total=subtotal+0.11*subtotal    
 
         context={
             'order':order,
