@@ -243,7 +243,7 @@ def add_product(request):
             data=request.POST
             product_name=data.get('product_name')
             product_description=data.get('product_description')
-            stock_count=data.get('stock_count')
+            stock_count=data.get('item_stock')
             item_price=data.get('item_price')
             product_image=request.FILES.get('product_image')
             category_id=data.get('category')
