@@ -1,7 +1,6 @@
 from django.db import models
 from Category.models import Category
 from account.models import Account
-from subscribe.interface import Observer,Subject
 # Create your models here.
 class SubscribeModel(models.Model):
     category=models.ForeignKey(Category,on_delete=models.CASCADE,blank=True,null=True)
