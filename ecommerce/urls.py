@@ -25,6 +25,7 @@ urlpatterns = [
     path('cart/',include('cart.urls')),
     path('subscribe/',include('subscribe.urls')),
     path('account/',include('account.urls')),
+    path('category/',include('Category.urls'))
    
 
     # for the order apps

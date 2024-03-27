@@ -72,15 +72,27 @@
                 {% else %}
 
 
-
+              <div>
                 <button type="submit" class="btn  btn-primary"> <span class="text">Add to
                     cart</span> <i class="fas fa-shopping-cart"></i></button>
+
+                  <a href="{% url 'share_facebook' single_product.id %}" class="social-btn facebook" target="_blank">
+                      <svg xmlns="http://www.w3.org/2000/svg" style="height:42px" viewBox="0 0 24 24">
+                          <path d="M19.19,3H4.81A1.81,1.81,0,0,0,3,4.81V19.19A1.81,1.81,0,0,0,4.81,21H12V14.25h-2V11.06h2V8.67c0-2,1.23-3.08,3-3.08h1.39v2.33h-1c-.5,0-1,0-1,1v1.67h2l-.31,3.19h-1.69V21h3.31A1.81,1.81,0,0,0,21,19.19V4.81A1.81,1.81,0,0,0,19.19,3Z"/>
+                      </svg>
+                      Share on Facebook
+                  </a> 
+                </div>    
+
+                     
                   {% endif %}
                 {% endif %}
 
             </article> <!-- product-info-aside .// -->
           </form>
+        
 
+          
 
 
 
