@@ -15,48 +15,12 @@ from subscribe.classes import ConcreteSubject
 from subscribe.models import SubscribeModel
 # Create your views here.
 from .models import Product
-import pandas as pd
-from qdrant_client import QdrantClient
-from qdrant_client.models import models
-from sentence_transformers import SentenceTransformer
-from .utils import load_data,prepare_data
 import re
 import unidecode
 
 def slugify(text):
     text = unidecode.unidecode(text).lower()
     return re.sub(r'[\W_]+', '-', text)
-
-
-# for sematic search 
-
-
-client = QdrantClient(":memory:")
-client.recreate_collection(collection_name='product_collection',
-                           vectors_config=models.VectorParams(
-                               size=384, distance=models.Distance.COSINE
-                           ))
-
-
-# vectorized our data create word embedaded
-model = SentenceTransformer('all-MiniLM-L6-v2')
-df = load_data('~/ecommerce_final/data1.csv')
-docx, payload = prepare_data(df)
-# vectors=load_vectors('vectorized_courses.pickle')
-# print(docx)
-vectors = model.encode(docx, show_progress_bar=True)
-
-
-client.upload_collection(
-    collection_name='product_collection',
-    vectors=vectors,
-    payload=payload,
-    ids=None,
-    batch_size=256
-
-)
-
-
 
 
 
@@ -159,44 +123,44 @@ def product_details(request,category_slug,product_slug):
 
 
     
-def search(request):
-    if 'keyword'  in request.GET:
-        keyword=request.GET['keyword']
-        if keyword:
-            # products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
-            # count=products.count()
-            # vectorized the search term
-            vectorized_text = model.encode(keyword).tolist()
-            products= client.search(collection_name='product_collection',
-                        query_vector=vectorized_text)
-            # count=products.count()            
-            #search the vectorDB and and get recomandation
-            result=[]
-            print(products)
-            for product in products:
-                if product.score>0.4:
-                    data=Product.objects.get(id=product.payload['id'])
-                    result.append(data)
-        context={
-            'all_products':result,
-            'count':len(result)
-        }    
-
-    return render(request,'store/store.html',context)
-    
 # def search(request):
 #     if 'keyword'  in request.GET:
 #         keyword=request.GET['keyword']
 #         if keyword:
-#             products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
-#             count=products.count()
-
+#             # products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+#             # count=products.count()
+#             # vectorized the search term
+#             vectorized_text = model.encode(keyword).tolist()
+#             products= client.search(collection_name='product_collection',
+#                         query_vector=vectorized_text)
+#             # count=products.count()
+#             #search the vectorDB and and get recomandation
+#             result=[]
+#             print(products)
+#             for product in products:
+#                 if product.score>0.4:
+#                     data=Product.objects.get(id=product.payload['id'])
+#                     result.append(data)
 #         context={
-#             'all_products':products,
-#             'count':count
-#         }    
-
+#             'all_products':result,
+#             'count':len(result)
+#         }
+#
 #     return render(request,'store/store.html',context)
+#
+def search(request):
+    if 'keyword'  in request.GET:
+        keyword=request.GET['keyword']
+        if keyword:
+            products=Product.objects.order_by("-created_date").filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+            count=products.count()
+
+        context={
+            'all_products':products,
+            'count':count
+        }
+
+    return render(request,'store/store.html',context)
 
 
 

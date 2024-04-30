@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<section class="section-conten padding-y bg">
+
+{% include 'include/alert.html' %}
+<div class="container">
+	<div class="row">
+	{% include 'include/dashboard_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Add Product</strong>
+
+		</header>
+		<div class="card-body">
+			<div class="row">
+			<div class="col-md-12">
+			{% if message %}
+			<p class="text-success">{{message}}</p>
+			{% elif error %}
+			<p class="text-danger">{{error}}</p>
+			{%endif %}
+				<form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label>Product Name</label>
+                            <input  required type="text" name="product_name" class="form-control" />
+						</div>
+						<div class="form-group col-md-6">
+							<label>Product Description</label>
+                            <textarea required type="text" name="product_description" class="form-control" rows=5></textarea>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="item_stock">Items In Stock</label>
+							<input  required type="number" name="item_stock" class="form-control" />
+						</div>
+						<div class="form-group">
+						<label for="item_price">Item Price</label>
+						<input  required type="number" name="item_price" class="form-control" />
+					</div>
+						<div class="form-group col-md-6">
+							<label>Product Picture</label>
+							<input required type="file" class="form-control"  name="product_image" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Select Category</label>
+						<select name="category" required class="form-control">
+						{% for cat in category %}
+						<option value="{{cat.id}}">{{ cat }}</option>
+						{% endfor %}
+						</select>
+					</div>
+					<input type="submit" value="Save" class="btn btn-primary">
+				</form>
+			</div>
+
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
+</div>
+
+<script>
+console.log("hello")
+    document.addEventListener('DOMContentLoaded', function () {
+        const priceInput = document.querySelector('input[name="item_price"]');
+        const stockInput = document.querySelector('input[name="item_stock"]');
+        const priceLabel = document.querySelector('label[for="item_price"]');
+        const stockLabel = document.querySelector('label[for="item_stock"]');
+
+        priceInput.addEventListener('input', function () {
+            if (parseFloat(priceInput.value) < 0) {
+                priceLabel.innerText = 'Price cannot be negative.';
+                                priceLabel.style.color = 'red';
+            } else {
+                priceLabel.innerText = 'Item Price';
+                                priceLabel.style.color = 'black';
+            }
+        });
+
+        stockInput.addEventListener('input', function () {
+            if (parseInt(stockInput.value) < 0) {
+                stockLabel.innerText = 'Stock cannot be negative.';
+				stockLabel.style.color = 'red';
+
+            } else {
+                stockLabel.innerText = 'Items in Stock';
+                stockLabel.style.color='black'
+            }
+        });
+    });
+</script>
+
+</section>
+
+{% endblock %}
